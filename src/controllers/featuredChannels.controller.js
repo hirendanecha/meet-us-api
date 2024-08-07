@@ -170,6 +170,17 @@ exports.createChannel = async function (req, res) {
     const newChannel = await featuredChannels.createChannel(data);
     console.log(newChannel);
     if (newChannel.insertId) {
+      const adminData = {
+        channelId: newChannel.insertId,
+        profileId: data.profileid,
+        isAdmin: "Y",
+      };
+      featuredChannels.CreateSubAdmin(adminData, function (err, result) {
+        if (err) {
+          console.log(err);
+          return utils.send500(res, err);
+        }
+      });
       res.send({
         error: false,
         data: newChannel.insertId,
