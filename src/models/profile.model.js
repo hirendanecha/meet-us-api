@@ -24,6 +24,9 @@ var Profile = function (profile) {
   this.ProfilePicName = profile.ProfilePicName;
   this.IsActivated = profile.IsActive;
   this.CreatedOn = new Date();
+  this.callNotificationSound = profile.callNotificationSound;
+  this.messageNotificationSound = profile.messageNotificationSound;
+  this.tagNotificationSound = profile.tagNotificationSound;
 };
 
 Profile.create = function (profileData, result) {
@@ -95,7 +98,10 @@ Profile.FindById = async function (profileId) {
     AccountType,
     MediaApproved,
     County,
-    userStatus
+    userStatus,
+    messageNotificationSound,
+    callNotificationSound,
+    tagNotificationSound
   FROM profile WHERE ID=?`;
   const values = profileId;
   let profile = await executeQuery(query, values);
@@ -178,6 +184,17 @@ Profile.editNotifications = function (id, isRead, result) {
       }
     }
   );
+};
+
+Profile.editNotificationSound = function (id, key, value) {
+  try {
+    const query = `update profile set ${key} = '${value}' where ID = ${id}`;
+    console.log(query);
+    const data = executeQuery(query);
+    return data;
+  } catch (error) {
+    return error;
+  }
 };
 
 Profile.deleteNotification = function (user_id, result) {
